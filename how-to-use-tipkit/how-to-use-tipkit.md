@@ -171,7 +171,7 @@ struct TipKitDemo: View {
         }
     }
 ```
-![](action-tip.mp4)
+![](action-tipkit.mp4)
 <video src="action-tipkit.mp4" controls></video>
 
 # Отказаться от подсказки
@@ -276,7 +276,7 @@ struct ParameterRule: View {
 
 При запуске приложения отображается только подсказка «Начало работы». Однако, как только вы коснетесь изображения чтобы закрыть подсказку, приложение отобразит подсказку «Избранное».
 
-![](rules-tip.mp4)
+![](rules-tipkit.mp4)
 <video src="rules-tipkit.mp4" controls></video>
 
 # Добавляем отображение подсказок в свое приложении
