@@ -276,8 +276,8 @@ struct ParameterRule: View {
 
 При запуске приложения отображается только подсказка «Начало работы». Однако, как только вы коснетесь изображения чтобы закрыть подсказку, приложение отобразит подсказку «Избранное».
 
-![](rules-tipkit.mp4)
-<video src="rules-tipkit.mp4" controls></video>
+![](https://youtu.be/yE6LokV8n9E)
+<video src="https://youtu.be/yE6LokV8n9E" controls></video>
 
 # Добавляем отображение подсказок в свое приложении
 
