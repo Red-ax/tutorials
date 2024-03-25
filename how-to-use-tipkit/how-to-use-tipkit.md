@@ -1,24 +1,24 @@
 ### Содержание
 
-* [Вступление](#intro)
-* [Базовая настройка](#base)
-* [Добавляем View](#addView)
-    * [Встраиваемые](#inline)
-    * [Всплывающие](#popover)
-* [Добавляем кнопки в подсказку(есть видео)](#addButtons)
-* [Закрытие подсказки](#closeTip)
-* [Правила(есть видео)](#rules)
-    * [Добавляем правило](#addRules)
-    * [Добавляем View](#addViewRules)
-* [Preview](#preview)
+* Вступление
+* Базовая настройка
+* Добавляем View
+    * Встраиваемые
+    * Всплывающие
+* Добавляем кнопки в подсказку(есть видео)
+* Закрытие подсказки
+* Правила(есть видео)
+    * Добавляем правила
+    * Добавляем View
+* Preview
 
 ---
 
-[TipKit](https://developer.apple.com/documentation/tipkit) - <span id="intro">позволяет легко отображать подсказки в приложениях. Появился в iOS 17 и доступен для iPhone, iPad, Mac, Apple Watch и Apple TV.</span>
+[TipKit](https://developer.apple.com/documentation/tipkit) - позволяет легко отображать подсказки в приложениях. Появился в iOS 17 и доступен для iPhone, iPad, Mac, Apple Watch и Apple TV.
 
 ![](tipkit-example.png)
 
-# <p id="base">Базовая настройка</p>
+# Базовая настройка
 
 В точке входа приложения импортируем `TipKit` и добавляем `Tips.configure`.
 
@@ -55,7 +55,7 @@ struct TipKitExampleApp: App {
 
 `datastoreLocation` - расположение хранилища данных, по умолчанию является каталогом `support`.
 
-# <p id="protocol">Реализуем протокол</p>
+# Реализуем протокол
 
 Чтобы создать подсказку нужно принять протокол Tip, этот протокол определяет содержание и условия в подсказке. Подсказка состоит из обязательного поля `title` и опциональных `message` и `image`.
 
@@ -75,11 +75,11 @@ struct InlineTip: Tip {
 }
 ```
 
-# <p id="addView">Добовляем View</p>
+# Добовляем View
 
 Подсказки бывают двух видов:
 
-### <p id="inline">Встраиваемые</p>
+### Встраиваемые
 
 Временно перестраивает интерфейс вокруг себя, чтобы ничего не было перекрыто (недоступно в tvOS).
 
@@ -116,7 +116,7 @@ struct TipKitDemo: View {
 
 ![](arrow-edge.png)
 
-### <p id="popover">Всплывающие</p>
+### Всплывающие
 
 Отображаются в виде наложения, не меняя представления.
 
@@ -139,7 +139,7 @@ struct TipKitDemo: View {
 ```
 ![](tipkit-popover-code.png)
 
-# <p id="addButtons">Добавляем кнопоки в подсказку</p>
+# Добавляем кнопоки в подсказку
 
 Чтобы подсказки были более интерактивными и имели больше возможностей, в протокол нужно добавить поле `actions`:
 
@@ -186,7 +186,7 @@ struct ActionTip: View {
 ![](action-tipkit.mp4)
 <video src="action-tipkit.mp4" controls></video>
 
-# <p id="closeTip">Закрытие подсказки</p>
+# Закрытие подсказки
 
 Подсказку можно закрыть, нажав на крестик или закрыть кодом , используя метод `invalidate`, который отменяет подсказку и не позводяет ей отображаться.
 
@@ -201,13 +201,13 @@ inlineTip.invalidate(reason: .actionPerformed)
 `.actionPerformed` - пользователь явное закрыл подсказку.
 
 
-# <p id="rules">Правила</p>
+# Правила
 
 TipKit позволяет создавать отдельные правила `rules` для каждой подсказки. 
 
 Правила позволяют использовать условия на основе состояний `@Parameter` или пользовательских событий.
 
-### <p id="addRules">Добавляем правило</p>
+### Добавляем правила
 
 Параметр `hasViewedGetStartedTip` со значением **false**
 
@@ -233,7 +233,7 @@ struct FavoriteRuleTip: Tip {
 }
 ```
 
-### <p id="addViewRules">Добавляем View</p>
+### Добавляем View
 
 ```swift
 struct ParameterRule: View {
@@ -278,7 +278,7 @@ struct ParameterRule: View {
 ```
 <video src="rules-tipkit.mp4" controls></video>
 
-# <p id="preview">Preview</p>
+# Preview
 
 Если закрыть подсказку, то она больше не будет отображаться в приложении. Поэтому для preview нужно сбросить хранилище данных подсказок `Tips.resetDatastore()`: 
 
