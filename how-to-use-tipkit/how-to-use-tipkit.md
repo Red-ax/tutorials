@@ -1,15 +1,12 @@
 ### Содержание
 
-* Вступление
-* Базовая настройка
-* Добавляем View
-    * Встраиваемые
-    * Всплывающие
+* Инициализация и настройка для приложения
+* Подсказки
+    * Inline - встраиваемые
+    * Popever - всплывающие
 * Добавляем кнопки в подсказку(есть видео)
-* Закрытие подсказки
-* Правила(есть видео)
-    * Добавляем правила
-    * Добавляем View
+* Закрыть подсказку
+* Правила отображения подсказки(есть видео)
 * Preview
 
 ---
@@ -18,7 +15,7 @@
 
 ![](tipkit-example.png)
 
-# Базовая настройка
+# Инициализация и настройка для приложения
 
 В точке входа приложения импортируем `TipKit` и добавляем `Tips.configure`.
 
@@ -55,10 +52,9 @@ struct TipKitExampleApp: App {
 
 `datastoreLocation` - расположение хранилища данных, по умолчанию является каталогом `support`.
 
-# Реализуем протокол
+# Подсказки
 
-Чтобы создать подсказку нужно принять протокол Tip, этот протокол определяет содержание и условия в подсказке. Подсказка состоит из обязательного поля `title` и опциональных `message` и `image`.
-
+Чтобы создать подсказку нужно принять протокол Tip, этот протокол определяет содержание и условия. Подсказка состоит из обязательного поля `title` и опциональных `message` и `image`.
 ```swift
 struct InlineTip: Tip {
     var title: Text {
@@ -75,15 +71,11 @@ struct InlineTip: Tip {
 }
 ```
 
-# Добовляем View
+Есть два вида подсказок:
 
-Подсказки бывают двух видов:
+### Inline - встраиваемые
 
-### Встраиваемые
-
-Временно перестраивает интерфейс вокруг себя, чтобы ничего не было перекрыто (недоступно в tvOS).
-
-Нужно создать экземпляр `TipView` и передать ему подсказку для отображения.
+Временно перестраивает интерфейс вокруг себя, чтобы их ничего не перекрывало. Создаем экземпляр `TipView` и передаем ему подсказку для отображения.
 
 ```swift
 struct TipKitDemo: View {
@@ -101,26 +93,19 @@ struct TipKitDemo: View {
         .padding()
     }
 }
+
+// Так же можно указать `arrowEdge` - напраление стрелочки подсказки.
+TipView(inlineTip, arrowEdge: .top)
+TipView(inlineTip, arrowEdge: .leading)
+TipView(inlineTip, arrowEdge: .trailing)
+TipView(inlineTip, arrowEdge: .bottom)
 ```
 
-![](tipkit-inline-code.png)
+![](inline-arrow.png)
 
-Так же можно указать `arrowEdge` - напраление стрелочки подсказки.
+### Popever - всплывающие
 
-```swift
-    TipView(inlineTip, arrowEdge: .top)
-    TipView(inlineTip, arrowEdge: .leading)
-    TipView(inlineTip, arrowEdge: .trailing)
-    TipView(inlineTip, arrowEdge: .bottom)
-```
-
-![](arrow-edge.png)
-
-### Всплывающие
-
-Отображаются в виде наложения, не меняя представления.
-
-Нужно прикрепить модификатор `popoverTip` кнопке или другим элементам интерфейса.
+Отображаются по верх интерфейса. Прикрепляем модификатор `popoverTip` кнопке или другим элементам интерфейса.
 
 ```swift
 struct TipKitDemo: View {
@@ -137,11 +122,11 @@ struct TipKitDemo: View {
     }
 }
 ```
-![](tipkit-popover-code.png)
+![](popover.png)
 
 # Добавляем кнопоки в подсказку
 
-Чтобы подсказки были более интерактивными и имели больше возможностей, в протокол нужно добавить поле `actions`:
+Чтобы появилась кнопка, в протокол нужно добавить поле `actions`:
 
 ```swift
 var actions: [Action] {
@@ -150,68 +135,44 @@ var actions: [Action] {
 }
 ```
 
-В замыкании `TipView`, по `action.id` мы обращаемся к нашим `actions`.
+Выше мы указывали id, именно по нему будем определять какое действие было вызвано.
 
 ```swift
-struct ActionTip: View {
-    @State private var textFieldData = ""
-    @State private var isShowRessetField = false
-    
-    private var tip = PasswordTip()
-    
-    var body: some View {
-        VStack(spacing: 20) {
-            Spacer()
-            TipView(tip, arrowEdge: .bottom) { action in
-                
-                if action.id == "reset-password" {
-                    isShowRessetField = true
-                }
-                
-                if action.id == "not-reset-password" {
-                    isShowRessetField = false
-                }
-                
-            }
-            Button("Войти") {}
-            TextField("Введите новый пароль", text: $textFieldData)
-                .textFieldStyle(.roundedBorder)
-                .opacity(isShowRessetField ? 1 : 0)
-            Spacer()
-        }
-        .padding()
+TipView(tip, arrowEdge: .bottom) { action in
+
+    if action.id == "reset-password" {
+        // действие reset-password
     }
+    
+    if action.id == "not-reset-password" {
+        // действие not-reset-password
+    }
+    
 }
 ```
-![](action-tipkit.mp4)
+![](actions.png)
+### <a href="#">Здесь видео</a>
 <video src="action-tipkit.mp4" controls></video>
 
-# Закрытие подсказки
+# Закрыть подсказку
 
-Подсказку можно закрыть, нажав на крестик или закрыть кодом , используя метод `invalidate`, который отменяет подсказку и не позводяет ей отображаться.
+Можно нажать на крестик или закрыть кодом, используя метод `invalidate`.
 
 ```swift
 inlineTip.invalidate(reason: .actionPerformed)
 ```
+Список причин по которым можно делать `invalidate`:
 
-`.actionPerformed` - пользователь выполнил действие, описанное в подсказке.
+* `.actionPerformed` - пользователь выполнил действие, описанное в подсказке.
 
-`.displayCountExceeded` - подсказка показана максимальное количество раз.
+* `.displayCountExceeded` - подсказка показана максимальное количество раз.
 
-`.actionPerformed` - пользователь явное закрыл подсказку.
+* `.actionPerformed` - пользователь явное закрыл подсказку.
 
 
-# Правила
+# Правила отображения подсказки
 
-TipKit позволяет создавать отдельные правила `rules` для каждой подсказки. 
-
-Правила позволяют использовать условия на основе состояний `@Parameter` или пользовательских событий.
-
-### Добавляем правила
-
-Параметр `hasViewedGetStartedTip` со значением **false**
-
-`Rule` проверяет значение переменной `hasViewedGetStartedTip`, когда значение равно true, подсказка должна отображаться.
+Правила на основе параметров отслеживают состояние приложения. В примере ниже `Rule` проверяет значение переменной `hasViewedGetStartedTip`, когда значение равно true, подсказка отобразится.
 
 ```swift
 struct FavoriteRuleTip: Tip {
@@ -224,63 +185,45 @@ struct FavoriteRuleTip: Tip {
         Text("Этот пользователь будет добавлен в папку избранное.")
     }
 
+    @Parameter
+    static var hasViewedGetStartedTip: Bool = false
+
     var rules: [Rule] {
         #Rule(Self.$hasViewedGetStartedTip) { $0 == true }
     }
 
-    @Parameter
-    static var hasViewedGetStartedTip: Bool = false
 }
 ```
-
-### Добавляем View
 
 ```swift
 struct ParameterRule: View {
     @State private var showDetail = false
     
-    private var favoriteRuleTip = FavoriteRuleTip()
-    private var gettingStartedTip = GettingStartedTip()
-    
     var body: some View {
         VStack {
-            ZStack(alignment: .topTrailing) {
-                Image("pug")
-                    .resizable()
-                    .scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
-                Image(systemName: "heart")
-                    .padding()
-                    .font(.largeTitle)
-                    .foregroundStyle(.white)
-                    .popoverTip(favoriteRuleTip, arrowEdge: .top)
-            }
+            Rectangle()
+                .frame(height: 100)
+                .popoverTip(FavoriteRuleTip(), arrowEdge: .top)
             .onTapGesture {
-                withAnimation {
-                    showDetail.toggle()
-                }
                 
-                // пользователь выполнил действие описанное в подсказке, отключаем подсказку
-                gettingStartedTip.invalidate(reason: .actionPerformed)
+                // пользователь выполнил действие описанное в подсказке, отключаем подсказку GettingStartedTip
+                GettingStartedTip().invalidate(reason: .actionPerformed)
                 
+                // значение hasViewedGetStartedTip true, показываем подсказку FavoriteRuleTip
                 FavoriteRuleTip.hasViewedGetStartedTip = true
             }
-            if showDetail {
-                Text("Мопс - приземистая собака с почти квадратным телом и приплюснутой мордочкой с обилием складок. У нее широко расставленные круглые умные глаза и характерная походка.")
-            } else {
-                TipView(GettingStartedTip())
-            }
-            Spacer()
+            TipView(GettingStartedTip())
         }
         .padding()
     }
 }
 ```
-<video src="rules-tipkit.mp4" controls></video>
+### <a href="#">Здесь видео</a>
+<video src="rules-video.mp4" controls></video>
 
 # Preview
 
-Если закрыть подсказку, то она больше не будет отображаться в приложении. Поэтому для preview нужно сбросить хранилище данных подсказок `Tips.resetDatastore()`: 
+Если закрыть подсказку в preview она больше не покажется, это не очень удобно. Чтобы такого не происходило нужно сбросить хранилище данных подсказок `Tips.resetDatastore()`
 
 ```swift
 #Preview {
